@@ -24,7 +24,7 @@ In return, the Server can request the client to
 Additionally, the server queries the match server to get the game status, which
 is sent to the client to convey match details (Scores, Time Left, etc) to players.
 
-# Server Requests
+# Requests
 
 A request is a JSON object, having a mandatory field `request`. `request` can be one of:
 
@@ -40,7 +40,7 @@ A request is a JSON object, having a mandatory field `request`. `request` can be
 
 * `askReady` - Ask all players for a lobby to ready up.
 
-## Server Requests
+## Client Requests
 
 These requests are sent to the Server.
 
@@ -80,7 +80,7 @@ Returns `id`, the Lobby ID
 
 * `id` - Lobby ID
 
-## Client Requests
+## Server Requests
 
 These requests are sent to the Client.
 

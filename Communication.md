@@ -26,7 +26,23 @@ In return, the Server can request the client to
 Additionally, the client queries the match server to get the game status, which
 is sent to the client to convey match details (Scores, Time Left, etc) to players.
 
-# Response format
+# Requests
+
+A request is a JSON object, having a mandatory field `request`. `request` can be one of:
+
+* `createLobby` - Creates an lobby.
+
+* `closeLobby` - Closes a lobby.
+
+* `addPlayer` - Adds a player to a lobby.
+
+* `removePlayer` - Removes a player from a lobby
+
+* `startMatch` - Creates the appropriate mumble channel, configures the server with the correct match, whitelist, etc.
+
+* `askReady` - Ask all players for a lobby to ready up.
+
+## Response format
 
 If the request is successful, the returned object is
 ```
@@ -48,22 +64,6 @@ If the request is unsuccessful, the returned object is
   }
 }
 ```
-
-# Server Requests
-
-A request is a JSON object, having a mandatory field `request`. `request` can be one of:
-
-* `createLobby` - Creates an lobby.
-
-* `closeLobby` - Closes a lobby.
-
-* `addPlayer` - Adds a player to a lobby.
-
-* `removePlayer` - Removes a player from a lobby
-
-* `startMatch` - Creates the appropriate mumble channel, configures the server with the correct match, whitelist, etc.
-
-* `askReady` - Ask all players for a lobby to ready up.
 
 ## Server Requests
 

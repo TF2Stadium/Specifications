@@ -15,14 +15,39 @@ server to:
 
 * Configure servers for the lobby, setup mumble channels.
 
+* Send short text notifications that clients display.
+
 In return, the Server can request the client to
 
 * Ask players to "Ready Up".
 
 * Connect players to the match server.
 
-Additionally, the server queries the match server to get the game status, which
+Additionally, the client queries the match server to get the game status, which
 is sent to the client to convey match details (Scores, Time Left, etc) to players.
+
+# Response format
+
+If the request is successful, the returned object is
+```
+{
+  successful: true,
+  data: {
+    ...
+  }
+}
+```
+
+If the request is unsuccessful, the returned object is
+```
+{
+  successful: false,
+  error: {
+    code: ...,
+    message: ...
+  }
+}
+```
 
 # Server Requests
 
@@ -30,7 +55,7 @@ A request is a JSON object, having a mandatory field `request`. `request` can be
 
 * `createLobby` - Creates an lobby.
 
-* `closeLobby` - Closes a lobby. 
+* `closeLobby` - Closes a lobby.
 
 * `addPlayer` - Adds a player to a lobby.
 
@@ -64,21 +89,17 @@ Returns `id`, the Lobby ID
 
 ### `addPlayer`
 
-* `steamid` - the player's steam ID
+* `lobbyid` - ID of the lobby the client wants to join
 
-* `name` - the player's name
+* `team` - (optional) `0` for RED, `1` for BLU
 
-* `team` - `0` for RED, `1` for BLU
-
-* `slot` - class slot.
+* `slot` - (optional) class slot. 0-5 in 6s, 0-9 in hl, in the usual order.
 
 ### `removePlayer`
 
-* `steamid` - the player's steam ID
+* `steamid` - (optional) ID of the player to kick from a lobby. If empty, kicks the authenticated player. If provided, requires admin privileges.
 
-### `startMatch`
-
-* `id` - Lobby ID
+* `lobbyid` - ID of the lobby the client wants to leave
 
 ## Client Requests
 
@@ -86,4 +107,16 @@ These requests are sent to the Client.
 
 ### `askReady`
 
-* `id` - Lobby ID
+### `startMatch`
+
+### `sendNotification`
+
+* `message` - the text of a notification. 140 characters max.
+
+### `getLobbyList`
+
+TODO
+
+### `getLobbyDetails`
+
+TODO

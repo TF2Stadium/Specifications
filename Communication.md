@@ -47,17 +47,16 @@ A request is a JSON object, having a mandatory field `request`. `request` can be
 If the request is successful, the returned object is
 ```
 {
-  successful: true,
+  success: true,
   data: ...
-  code: -1
 }
 ```
 
 If the request is unsuccessful, the returned object is
 ```
 {
-  successful: false,
-  data: ...
+  success: false,
+  message: ...
   code: ...
 }
 ```

@@ -48,9 +48,8 @@ If the request is successful, the returned object is
 ```
 {
   successful: true,
-  data: {
-    ...
-  }
+  data: ...
+  code: -1
 }
 ```
 
@@ -58,13 +57,12 @@ If the request is unsuccessful, the returned object is
 ```
 {
   successful: false,
-  error: {
-    code: ...,
-    message: ...
-  }
+  data: ...
+  code: ...
 }
 ```
 
+`data`'s type varies by request sent.
 ## Server Requests
 
 These requests are sent to the Server.

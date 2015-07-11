@@ -92,6 +92,10 @@ Returns `id`, the Lobby ID
 
 * `slot` - (optional) class slot. 0-5 in 6s, 0-9 in hl, in the usual order.
 
+If the player has already joined a lobby, and `lobbyid` is the player's current
+lobby, the player's current team/slot will be changed accordingly. (Provided that
+the chosen slot is also empty)
+
 ### `removePlayer`
 
 * `steamid` - (optional) ID of the player to kick from a lobby. If empty, kicks the authenticated player. If provided, requires admin privileges.

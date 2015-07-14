@@ -28,8 +28,6 @@ is sent to the client to convey match details (Scores, Time Left, etc) to player
 
 # Requests
 
-A request is a JSON object, having a mandatory field `request`. `request` can be one of:
-
 * `createLobby` - Creates an lobby.
 
 * `closeLobby` - Closes a lobby.
@@ -42,6 +40,11 @@ A request is a JSON object, having a mandatory field `request`. `request` can be
 
 * `askReady` - Ask all players for a lobby to ready up.
 
+# Request format
+
+Requests are sent over socket.io's `emit`, with the event name being the request's name. Request
+parameters are sent as an additional JSON argument to `emit
+`
 ## Response format
 
 If the request is successful, the returned object is

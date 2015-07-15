@@ -156,13 +156,15 @@ These requests are sent to the Client.
 [
 	'class_name': { //if id == "", then slot if empty, else taken
 		'red' : {
-		'id': 'xxx' //steamid string
-		'name': 'foo' //player name
+		'id': 'xxx'      //steamid string
+		'name': 'foo'    //player name
+		'state': "ready" //or unready
 		},
 		
 		'blu': {
 		'id': 'xyz'
 		'name': 'foo'
+		'state': "unready"
 		}
 	}
 	...

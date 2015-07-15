@@ -28,13 +28,13 @@ is sent to the client to convey match details (Scores, Time Left, etc) to player
 
 # Requests
 
-* `createLobby` - Creates an lobby.
+* `lobbyCreate` - Creates an lobby.
 
-* `closeLobby` - Closes a lobby.
+* `lobbyClose` - Closes a lobby.
 
-* `addPlayer` - Adds a player to a lobby.
+* `lobbyJoin` - Adds a player to a lobby.
 
-* `removePlayer` - Removes a player from a lobby
+* `lobbyKickPlayer` - Removes a player from a lobby
 
 * `startMatch` - Creates the appropriate mumble channel, configures the server with the correct match, whitelist, etc.
 
@@ -106,6 +106,8 @@ the chosen slot is also empty)
 * `steamid` - (optional) ID of the player to kick from a lobby. If empty, kicks the authenticated player. If provided, requires admin privileges.
 
 * `lobbyid` - ID of the lobby the client wants to leave
+
+* `ban` - true if player is to be banned, else false
 
 ### `chatSend`:
 

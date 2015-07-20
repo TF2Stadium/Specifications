@@ -119,7 +119,7 @@ the chosen slot is also empty)
 
 These requests are sent to the Client.
 
-### `chatSend`:
+### `chatReceive`:
 
 * `createdAt` - timestamp of message creation
 

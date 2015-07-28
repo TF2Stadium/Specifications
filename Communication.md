@@ -91,6 +91,7 @@ In the following message types
 
 * `team` is in `['red', 'blu']`
 * `type` is in `['sixes', 'highlander']`
+* `state` (player state) is in `['ready', 'notReady']`
 * `class` is in
   * if `type == 'sixes'` : [`scout1`, `scout2`, `roamer`, `pocket`, `demoman`, `medic`]
   * if `type == 'highlander'` : `['scout', 'soldier', 'pyro', 'demoman', 'heavy', 'engineer', 'medic', 'sniper', 'spy']`
@@ -196,7 +197,7 @@ These requests are sent to the Client.
 
 * `id` - lobby numeric ID, incremental, server-side generated
 
-* `format` - lobby format
+* `type` - lobby type. `type` constant.
 
 * `createdAt` - string, timestamp of lobby creation
 
@@ -211,17 +212,17 @@ These requests are sent to the Client.
 * `classes` - JSON array in the following format:
 ```
 [
-	'class_name': { //if id == "", then slot if empty, else taken
+	<class constant>: { //if id == "", then slot if empty, else taken
 		'red' : {
 		'id': 'xxx'      //steamid string
 		'name': 'foo'    //player name
-		'state': "ready" //or unready
+		'state': "ready" //player state constant
 		},
 
 		'blu': {
 		'id': 'xyz'
 		'name': 'foo'
-		'state': "unready"
+		'state': "notready"
 		}
 	}
 	...

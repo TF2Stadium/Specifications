@@ -1,9 +1,8 @@
 # Communication
 
-The Server and Client communicate using the WebSockets protocol. All communication
+The Server and Client communicate using the socket.io WebSockets protocol. All communication
 will be in the form of JSON objects. Lobbies are managed server-side, with the
-client sending appropriate requests to the server. The MVP client can request the
-server to:
+client sending appropriate messages to the server. For messages that require responses, the server returns a socket.io acknowledgement with the response data. The MVP client can request the server to:
 
 * Create a Lobby.
 
@@ -17,34 +16,54 @@ server to:
 
 * Send short text notifications that clients display.
 
-In return, the Server can request the client to
+In return, the Server can message the client to
 
 * Ask players to "Ready Up".
 
 * Connect players to the match server.
 
-Additionally, the client queries the match server to get the game status, which
-is sent to the client to convey match details (Scores, Time Left, etc) to players.
+* Deliver information about running lobbies and their info (Scores, Time Left, etc)
 
-# Requests
+## Messages
 
-* `lobbyCreate` - Creates an lobby.
+### Server
 
-* `lobbyClose` - Closes a lobby.
+* [`lobbyCreate`](#lobbycreate) - Creates an lobby.
 
-* `lobbyJoin` - Adds a player to a lobby.
+* [`lobbyClose`](#lobbyclose) - Closes a lobby.
 
-* `lobbyKickPlayer` - Removes a player from a lobby
+* [`lobbyJoin`](#lobbyjoin) - Adds a player to a lobby.
 
-* `startMatch` - Creates the appropriate mumble channel, configures the server with the correct match, whitelist, etc.
+* [`lobbyJoinSpectator`](#lobbyjoinspectator) - Adds a player to a lobby as a spectator
 
-* `askReady` - Ask all players for a lobby to ready up.
+* [`lobbyRemovePlayer`](#lobbyremoveplayer) - Removes a player from a lobby
 
-# Request format
+* [`playerReady`](#playerready) - Readies the authenticated player.
+
+* [`playerUnready`](#playerunready) - Unreadies the authenticated player.
+
+### Client
+
+* [`chatReceive`](#chatreceive) - Sends the client a chat message
+
+* [`lobbyListData`](#lobbylistdata) - Sends the client the list of lobbies that haven't yet started
+
+* [`lobbyData`](#lobbydata) - Sends the client data about a specific lobby. Only sent if the player is in that lobby.
+
+* [`lobbyReadyUp`](#lobbyreadyup) - Asks a player in a lobby to ready up.
+
+* [`lobbyStart`](#lobbystart) - Notifies a player in a lobby that it started
+
+* [`sendNotification`](#sendnotification) - Sends a short toast notification to a client
+
+## Request format
 
 Requests are sent over socket.io's `emit`, with the event name being the request's name. Request
 parameters are sent as an additional JSON argument to `emit
 `
+
+Lobby types can be one of `["hl", "6s"]`. This list will be expanded when the project supports more lobby types.
+
 ## Response format
 
 If the request is successful, the returned object is
@@ -65,15 +84,30 @@ If the request is unsuccessful, the returned object is
 ```
 
 `data`'s type varies by request sent.
+
+## Constants
+
+In the following message types
+
+* `team` is in `['red', 'blu']`
+* `type` is in `['sixes', 'highlander']`
+* `class` is in
+  * if `type == 'sixes'` : [`scout1`, `scout2`, `roamer`, `pocket`, `demoman`, `medic`]
+  * if `type == 'highlander'` : `['scout', 'soldier', 'pyro', 'demoman', 'heavy', 'engineer', 'medic', 'sniper', 'spy']`
+
+## Authentication
+
+Client's authentication is verified automatically when the socket.io connection is established, so all the client has to do is be logged into the website the normal http way.
+
 ## Server Requests
 
 These requests are sent to the Server.
 
-### `lobbyCreate`
+### lobbyCreate
 
 * `mapName`
 
-* `format` - sixes, HL (lol), etc
+* `type` - a `type` constant
 
 * `whitelist` - whitelist ID from [whitelist.tf](http://whitelist.tf/)
 
@@ -85,41 +119,62 @@ These requests are sent to the Server.
 
 Returns `id`, the Lobby ID
 
-### `lobbyClose`
+### lobbyClose
 
 * `id` - Lobby ID
 
-### `lobbyJoin`
+### lobbyJoin
 
-* `lobbyid` - ID of the lobby the client wants to join
+Joins a lobby as a player
 
-* `team` - (optional) `0` for RED, `1` for BLU
+* `id` - ID of the lobby the client wants to join
 
-* `slot` - (optional) class slot. 0-5 in 6s, 0-9 in hl, in the usual order.
+* `team` - a `team` constant
+
+* `class` - a `class` constant
 
 If the player has already joined a lobby, and `lobbyid` is the player's current
-lobby, the player's current team/slot will be changed accordingly. (Provided that
-the chosen slot is also empty)
+lobby, the player's current team/slot will be changed accordingly (provided that
+the chosen slot is also empty).
 
-### `lobbyRemovePlayer`
+### lobbyJoinSpectator
 
-* `steamid` - (optional) ID of the player to kick from a lobby. If empty, kicks the authenticated player. If provided, requires admin privileges.
+Joins a lobby as a spectator (in the website, unrelated to tf2 spectating)
 
-* `lobbyid` - ID of the lobby the client wants to leave
+* `id` - ID of the lobby the client wants to join
 
-* `ban` - true if player is to be banned, else false
 
-### `chatSend`:
+### lobbyRemovePlayer
+
+Removes a player or a spectator from a lobby.
+
+* `steamid` - (optional) ID of the player to kick from a lobby. If empty, removes the authenticated player from their current lobby. If provided, requires admin privileges.
+
+* `ban` - true if player is to be banned from the lobby, else false
+
+### playerReady
+
+Readies the player in the lobby they are in.
+
+No parameters.
+
+### playerUnready
+
+Unreadies the player in the lobby they are in.
+
+No parameters.
+
+### chatSend
 
 * `message` - message string
 
-* `room` - room to which the message should go
+* `room` - room to which the message should go. If empty or less than 0, the message is sent to the lobby list view chat.
 
 ## Client Requests
 
 These requests are sent to the Client.
 
-### `chatReceive`:
+### chatReceive
 
 * `createdAt` - timestamp of message creation
 
@@ -137,7 +192,7 @@ These requests are sent to the Client.
 
 * `colorize` - hex code denoting color for the message text
 
-### `lobbyListData`
+### lobbyListData
 
 * `id` - lobby numeric ID, incremental, server-side generated
 
@@ -162,7 +217,7 @@ These requests are sent to the Client.
 		'name': 'foo'    //player name
 		'state': "ready" //or unready
 		},
-		
+
 		'blu': {
 		'id': 'xyz'
 		'name': 'foo'
@@ -173,13 +228,17 @@ These requests are sent to the Client.
 ]
 ```
 
-### `lobbyReady`:
 
-* `id` - lobby ID, integer
+### lobbyData
+
+TODO
+
+### lobbyReadyUp
+Asks the players to send `playerReady` messages
 
 * `time` - timestamp value
 
-# `lobbyStart`
+### lobbyStart
 
 * `id` - lobby ID, integer
 
@@ -204,7 +263,6 @@ These requests are sent to the Client.
 }
 ```
 
-### `sendNotification`
+### sendNotification
 
 * `message` - the text of a notification. 140 characters max.
-

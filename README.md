@@ -1,2 +1,1 @@
-# Specifications
-Specifications about the Plattform, including JSON Schemas etc.
+TF2Stadium platform specifications.

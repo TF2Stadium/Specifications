@@ -108,31 +108,31 @@ These requests are sent to the Server.
 
 * `mapName`
 
-* `type` - a `type` constant
+* `type` - string - a `type` constant
 
-* `whitelist` - whitelist ID from [whitelist.tf](http://whitelist.tf/)
+* `whitelist` - integer - whitelist ID from [whitelist.tf](http://whitelist.tf/)
 
-* `server` - Server address, with port (`example.org:1234`)
+* `server` - string - Server address, with port (`example.org:1234`)
 
-* `rconpwd` - password to the server's RCON
+* `rconpwd` - string - password to the server's RCON
 
-* `mumbleRequired` - true if mumble required for lobby, else false
+* `mumbleRequired` - bool - true if mumble required for lobby, else false
 
 Returns `id`, the Lobby ID
 
 ### lobbyClose
 
-* `id` - Lobby ID
+* `id` - integer - Lobby ID
 
 ### lobbyJoin
 
 Joins a lobby as a player
 
-* `id` - ID of the lobby the client wants to join
+* `id` - integer - ID of the lobby the client wants to join
 
-* `team` - a `team` constant
+* `team` - string - a `team` constant
 
-* `class` - a `class` constant
+* `class` - string - a `class` constant
 
 If the player has already joined a lobby, and `lobbyid` is the player's current
 lobby, the player's current team/slot will be changed accordingly (provided that
@@ -142,16 +142,16 @@ the chosen slot is also empty).
 
 Joins a lobby as a spectator (in the website, unrelated to tf2 spectating)
 
-* `id` - ID of the lobby the client wants to join
+* `id` - integer - ID of the lobby the client wants to join
 
 
 ### lobbyRemovePlayer
 
 Removes a player or a spectator from a lobby.
 
-* `steamid` - (optional) ID of the player to kick from a lobby. If empty, removes the authenticated player from their current lobby. If provided, requires admin privileges.
+* `steamid` - string - (optional) ID of the player to kick from a lobby. If empty, removes the authenticated player from their current lobby. If provided, requires admin privileges.
 
-* `ban` - true if player is to be banned from the lobby, else false
+* `ban` - boolean - true if player is to be banned from the lobby, else false
 
 ### playerReady
 
@@ -167,9 +167,9 @@ No parameters.
 
 ### chatSend
 
-* `message` - message string
+* `message` - string -  message string
 
-* `room` - room to which the message should go. If empty or less than 0, the message is sent to the lobby list view chat.
+* `room` - string - room to which the message should go. Each lobby has a chat room with a name 'lobby_id'. Otherwise, if the `room` parameter is not an integer string, the message will be sent to the lobby list menu chat.
 
 ## Client Requests
 
@@ -177,37 +177,39 @@ These requests are sent to the Client.
 
 ### chatReceive
 
-* `createdAt` - timestamp of message creation
+* `createdAt` - integer - timestamp of message creation. Unix timestamp in seconds.
 
-* `message` - message string
+* `message` - string - message string
 
-* `room` - room to which the message should go
+* `room` - string - room which the message should go to. See `#chatSend`.  
 
 * `user` - json map with the fields:
 ```
 {
-	id: ...   //steamid of player
-	name: ... //name of player
+	id: string   //steamid of player
+	name: string //name of player
 }
 ```
 
-* `colorize` - hex code denoting color for the message text
+* `colorize` - string - hex code denoting color for the message text, e.g. "#AB11EF"
 
 ### lobbyListData
 
-* `id` - lobby numeric ID, incremental, server-side generated
+Returns an array of the following lobby objects:
 
-* `type` - lobby type. `type` constant.
+* `id` - integer - lobby numeric ID, incremental, server-side generated
 
-* `createdAt` - string, timestamp of lobby creation
+* `type` - string - lobby type. `type` constant.
 
-* `whitelist` - whitelist ID from whitelist.tf
+* `createdAt` - integer - timestamp of lobby creation. Unix timestamp in seconds.
 
-* `players` - number of players currently in the lobby
+* `whitelist` - integer - whitelist ID from whitelist.tf
 
-* `owner` - a JSON map with the fields `id` (steamid), and `name`
+* `players` - integer - number of players currently in the lobby
 
-* `state` - state of lobby
+* `owner` - a JSON map with the fields `id:string` (steamid), and `name:string`
+
+* `state` - string - state of lobby. A `lobbyState` constant (TODO specify)
 
 * `classes` - JSON array in the following format:
 ```
@@ -215,8 +217,8 @@ These requests are sent to the Client.
 	<class constant>: { //if id == "", then slot if empty, else taken
 		'red' : {
 		'id': 'xxx'      //steamid string
-		'name': 'foo'    //player name
-		'state': "ready" //player state constant
+		'name': 'foo'    //player name string
+		'state': "ready" //player state constant, string
 		},
 
 		'blu': {
@@ -237,33 +239,33 @@ TODO
 ### lobbyReadyUp
 Asks the players to send `playerReady` messages
 
-* `time` - timestamp value
+* `time` - integer - timestamp value, Unix timestamp in seconds
 
 ### lobbyStart
 
-* `id` - lobby ID, integer
+* `id` - integer - lobby ID, integer
 
-* `time` - timestamp value
+* `time` - integer - timestamp value, Unix timestamp in seconds
 
 * `game` - a json object with the following fields:
 ```
 {
 	'ip': "x.x.x.x" //string
 	'port': 1233 //integer
-	'password': "lobbypass"
+	'password': "lobbypass" //string
 }
 ```
 
 * `mumble` - a json object with the following fields:
 ```
 {
-	'ip': "x.x.x.x"
-	'port': 1234
-	'channel': "match13"
-	'password': "foo"
+	'ip': "x.x.x.x" //string
+	'port': "1234" //string
+	'channel': "match13" //string
+	'password': "foo" //string
 }
 ```
 
 ### sendNotification
 
-* `message` - the text of a notification. 140 characters max.
+* `message` - string - the text of a notification. 140 characters max.

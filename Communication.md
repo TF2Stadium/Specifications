@@ -92,6 +92,7 @@ In the following message types
 * `team` is in `['red', 'blu']`
 * `type` is in `['sixes', 'highlander']`
 * `state` (player state) is in `['ready', 'notReady']`
+* `lobbyState` is in `['initializing, waiting, inProgress, ended']`
 * `class` is in
   * if `type == 'sixes'` : [`scout1`, `scout2`, `roamer`, `pocket`, `demoman`, `medic`]
   * if `type == 'highlander'` : `['scout', 'soldier', 'pyro', 'demoman', 'heavy', 'engineer', 'medic', 'sniper', 'spy']`
@@ -118,7 +119,7 @@ These requests are sent to the Server.
 
 * `mumbleRequired` - bool - true if mumble required for lobby, else false
 
-Returns `id`, the Lobby ID
+Returns `id`, the Lobby ID. The created lobby is in state `initializing`, and the player starts receiving its `lobbyData` notifications. If server initialization succeeds, the server's type changes to `waiting`. If it fails, the type changes to `ended` and a notification (`sendNotification`) is sent.
 
 ### lobbyClose
 
@@ -195,40 +196,51 @@ These requests are sent to the Client.
 
 ### lobbyListData
 
-Returns an array of the following lobby objects:
+Returns:
 
-* `id` - integer - lobby numeric ID, incremental, server-side generated
-
-* `type` - string - lobby type. `type` constant.
-
-* `createdAt` - integer - timestamp of lobby creation. Unix timestamp in seconds.
-
-* `whitelist` - integer - whitelist ID from whitelist.tf
-
-* `players` - integer - number of players currently in the lobby
-
-* `owner` - a JSON map with the fields `id:string` (steamid), and `name:string`
-
-* `state` - string - state of lobby. A `lobbyState` constant (TODO specify)
-
-* `classes` - JSON array in the following format:
 ```
-[
-	<class constant>: { //if id == "", then slot if empty, else taken
-		'red' : {
-		'id': 'xxx'      //steamid string
-		'name': 'foo'    //player name string
-		'state': "ready" //player state constant, string
-		},
+{
+  lobbies: LobbySummary[]
+}
+```
+where a LobbySummary object is
 
-		'blu': {
-		'id': 'xyz'
-		'name': 'foo'
-		'state': "notready"
-		}
-	}
-	...
-]
+```
+{
+  `id`: integer //lobby numeric ID, incremental, server-side generated
+
+  `type`: string // lobby type. `type` constant.
+
+  `createdAt`: integer // timestamp of lobby creation. Unix timestamp in seconds.
+
+  `whitelist`: integer // whitelist ID from whitelist.tf
+
+  `players`: integer // number of players currently in the lobby
+
+  `owner`: {
+      `id`: string // owner steamid
+      `name`: string // owner name
+  }
+
+  `state`: string // state of lobby. A `lobbyState` constant
+
+  `classes`: //JSON array in the following format:
+  [
+  	<class constant>: {
+  		'red' : {
+    		'id': string //steamid. If "", slot is unoccupied.
+    		'name': string //player name. If "", slot is unoccupied.
+    		'state': string //player state constant, string
+  		},
+
+  		'blu': {
+    		'id': string
+    		'name': string
+    		'state': string
+  		}
+  	}
+  ]
+}
 ```
 
 

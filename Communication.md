@@ -62,8 +62,6 @@ Requests are sent over socket.io's `emit`, with the event name being the request
 parameters are sent as an additional JSON argument to `emit
 `
 
-Lobby types can be one of `["hl", "6s"]`. This list will be expanded when the project supports more lobby types.
-
 ## Response format
 
 If the request is successful, the returned object is

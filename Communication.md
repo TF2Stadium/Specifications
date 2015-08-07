@@ -42,6 +42,12 @@ In return, the Server can message the client to
 
 * [`playerUnready`](#playerunready) - Unreadies the authenticated player.
 
+* [`chatSend`](#chatsend) - Sends a message to the chat.
+
+* [`playerSettingsGet`](#playersettingsget) - Gets player's settings.
+
+* [`playerSettingsSet`](#playersettingsset) - Sets a player setting.
+
 ### Client
 
 * [`chatReceive`](#chatreceive) - Sends the client a chat message
@@ -169,6 +175,19 @@ No parameters.
 * `message` - string -  message string
 
 * `room` - string - room to which the message should go. Each lobby has a chat room with a name 'lobby_id'. Otherwise, if the `room` parameter is not an integer string, the message will be sent to the lobby list menu chat.
+
+### playerSettingsGet
+
+* `key` - string - optional
+
+Returns a player setting json object where each key holds a value string. If `key` is provided, only that key and its value is returned (the object will have one key). Otherwise, every player settings entry is returned (the object will have many keys)
+
+### playerSettingsGet
+
+* `key` - string
+* `value` - string
+
+Sets or updates a setting identified by `key` to hold value `value`
 
 ## Client Requests
 

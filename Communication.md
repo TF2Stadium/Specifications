@@ -279,9 +279,7 @@ Asks the players to send `playerReady` messages
 * `game` - a json object with the following fields:
 ```
 {
-	'ip': "x.x.x.x" //string
-	'port': 1233 //integer
-	'password': "lobbypass" //string
+	host: 'example.org:xyz'
 }
 ```
 
@@ -291,7 +289,6 @@ Asks the players to send `playerReady` messages
 	'ip': "x.x.x.x" //string
 	'port': "1234" //string
 	'channel': "match13" //string
-	'password': "foo" //string
 }
 ```
 

@@ -34,7 +34,7 @@ In return, the Server can message the client to
 
 * [`lobbyJoin`](#lobbyjoin) - Adds a player to a lobby.
 
-* [`lobbyJoinSpectator`](#lobbyjoinspectator) - Adds a player to a lobby as a spectator
+* [`lobbySpectatorJoin`](#lobbyspectatorjoin) - Adds a player to a lobby as a spectator
 
 * [`lobbyRemovePlayer`](#lobbyremoveplayer) - Removes a player from a lobby
 
@@ -143,7 +143,7 @@ If the player has already joined a lobby, and `lobbyid` is the player's current
 lobby, the player's current team/slot will be changed accordingly (provided that
 the chosen slot is also empty).
 
-### lobbyJoinSpectator
+### lobbySpectatorJoin
 
 Joins a lobby as a spectator (in the website, unrelated to tf2 spectating)
 
@@ -154,9 +154,12 @@ Joins a lobby as a spectator (in the website, unrelated to tf2 spectating)
 
 Removes a player or a spectator from a lobby.
 
+* `id` - int - lobby id.
+
 * `steamid` - string - (optional) ID of the player to kick from a lobby. If empty, removes the authenticated player from their current lobby. If provided, requires admin privileges.
 
 * `ban` - boolean - true if player is to be banned from the lobby, else false
+
 
 ### playerReady
 

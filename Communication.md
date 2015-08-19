@@ -192,6 +192,12 @@ Returns a player setting json object where each key holds a value string. If `ke
 
 Sets or updates a setting identified by `key` to hold value `value`
 
+### playerProfile
+
+* `steamid` - string - optional
+
+Returns player profile's data as a json object. If a `steamid` is not provided, it will use the socket's player id. the current fields that should be returned are: `id`, `steamid`, `avatar`, `createdAt`, `gameHours`, `name` and a `stats` object with the following fields: `playedHighlanderCount` and `playedSixesCount`
+
 ## Client Requests
 
 These requests are sent to the Client.

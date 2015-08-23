@@ -185,12 +185,40 @@ No parameters.
 
 Returns a player setting json object where each key holds a value string. If `key` is provided, only that key and its value is returned (the object will have one key). Otherwise, every player settings entry is returned (the object will have many keys)
 
-### playerSettingsGet
+### playerSettingsSet
 
 * `key` - string
 * `value` - string
 
 Sets or updates a setting identified by `key` to hold value `value`
+
+### playerProfile
+
+* `steamid` - string - the steamid of a player
+
+Returns player data in a format
+```
+{
+  stats:
+    {
+      playedHighlanderCount: integer,
+      playedSixesCount: integer,
+    }
+  
+	createdAt: integer // unix seconds
+	gameHours: integer
+  
+	id: integer
+	steamid: string
+	avatar: string // the avatar url	
+	name: string
+  
+  bans: [{ // only contains active bans
+    type: string // banType constant, in Admin.md
+    until: integer  // unix seconds
+    }]
+}
+```
 
 ## Client Requests
 

@@ -1,16 +1,16 @@
 # Communication
 
-The Server and Client communicate using the socket.io WebSockets protocol. All communication
-will be in the form of JSON objects. Lobbies are managed server-side, with the
-client sending appropriate messages to the server. For messages that require responses, the server returns a socket.io acknowledgement with the response data. The MVP client can request the server to:
+The Server and Client communicate using the [wsevent](https://github.com/TF2Stadium/wsevent) library over WebSockets. All communication will be in the form of JSON objects. Lobbies are managed server-side, with the client sending appropriate messages to the server. The server may directly reply to these messages, and may also send unsolicited messages to the client.
+
+A client can request the server to:
 
 * Create a Lobby.
 
 * Close a Lobby.
 
-* Add players to the lobby.
+* Join a slot in a lobby.
 
-* Remove/Kick players from the lobby.
+* Remove/Kick players from a lobby. (with proper permissions)
 
 * Configure servers for the lobby, setup mumble channels.
 
@@ -64,9 +64,7 @@ In return, the Server can message the client to
 
 ## Request format
 
-Requests are sent over socket.io's `emit`, with the event name being the request's name. Request
-parameters are sent as an additional JSON argument to `emit
-`
+Requests are sent over wsevent's `Emit`, with the event name being the request's name. Request parameters are sent as an additional JSON argument.
 
 ## Response format
 
@@ -103,7 +101,7 @@ In the following message types
 
 ## Authentication
 
-Client's authentication is verified automatically when the socket.io connection is established, so all the client has to do is be logged into the website the normal http way.
+Client's authentication is verified automatically when the connection is established, so all the client has to do is be logged into the website the normal http way.
 
 ## Server Requests
 

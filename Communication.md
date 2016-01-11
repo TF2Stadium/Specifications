@@ -242,14 +242,7 @@ These requests are sent to the Client.
 
 ### lobbyListData
 
-Returns:
-
-```
-{
-  lobbies: LobbySummary[]
-}
-```
-where a LobbySummary object is
+Returns a list of `LobbySummary`s, where a LobbySummary object is
 
 ```
 {
